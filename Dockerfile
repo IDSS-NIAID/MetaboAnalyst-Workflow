@@ -1,13 +1,17 @@
 # MetaboAnalyst docker file
 # see https://www.metaboanalyst.ca/
+# built with:
+#  docker build -t idssniaid/metaboanalyst .
 # run container with:
-#  docker run --rm -p 8888:8787 -e PASSWORD=pasword metaboanalyst
+#  docker run --rm -p 8888:8787 -e PASSWORD=pasword --volume $(path):/home/rstudio idssniaid/metaboanalyst
+
 
 # start with Bioconductor 3.13 and Shiny
 FROM bioconductor/bioconductor_docker:RELEASE_3_13
 
-RUN apt-get update && apt-get install -y \
-  iputils-ping
+
+# use packages from the same version of R as our Bioconductor release
+RUN echo "options(repos = c(CRAN = 'https://packagemanager.rstudio.com/cran/2021-08-10+j7CXpjQ9'))" >> /usr/local/lib/R/etc/Rprofile.site
 
 
 # install Bioconductor dependencies
@@ -71,15 +75,13 @@ RUN R -e 'install.packages(\
     "car",\
     "gdata",\
     "huge",\
-    "ppcor"),\
-  repos="https://packagemanager.rstudio.com/cran/2021-08-10+j7CXpjQ9")'
+    "ppcor")\
+  )'
 
 
-# copy and install MetabolanalystR
-# COPY MetabolanalystR.tar.gz /MetabolanalystR.tar.gz
-# RUN tar -zxf MetabolanalystR.tar.gz
-# RUN R -e 'devtools::install("MetabolanalystR")'
+# install MetabolanalystR
 RUN R -e 'devtools::install_github("xia-lab/MetaboAnalystR", upgrade = "never")'
+
 
 # start up RShiny
 CMD ["/init"]
