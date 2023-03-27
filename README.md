@@ -11,7 +11,7 @@ The Docker container defined in this repository contains all dependencies needed
 
 * Start the container with the following command (it is highly recommended that you replace "password" with something more secure, e.g. you could use `-e PASSWORD=better-password!`):
 
-> `docker run --rm -p 8888:8787 -e PASSWORD=pasword --volume $(path):/home/rstudio idssniaid/metaboanalyst`
+> `docker run --rm -p 8888:8787 -e PASSWORD=pasword --volume $(path):/home/rstudio idssniaid/metaboanalyst:latest`
 
 * Open [https://localhost:8888](https://localhost:8888) in your browser and login in with the username, "rstudio", and the password specified above.
 
